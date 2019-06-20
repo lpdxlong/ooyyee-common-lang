@@ -1,0 +1,20 @@
+{
+    "name": "lpdxlong/ooyyee-common-lang",
+    "description": "common utils",
+    "authors": [
+        {
+            "name": "lpdx111"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=5.6",
+        "phpoffice/phpexcel": "^1.8",
+        "topthink/framework": "~v5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "ooyyee\\": "src/ooyyee/"
+        }
+    }
+}
