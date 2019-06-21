@@ -20,10 +20,15 @@ class Properties{
 	public function get($key,$default=null){
 		return isset($this->config[$key])?$this->config[$key]:$default;
 	}
+
+    /**
+     * @param $key
+     * @param string|null $value
+     */
 	public function set($key,$value=""){
 		if(is_array($key)){
 			$this->config=array_merge($this->config,$key);		
-		}elseif(is_null($value)){
+		}elseif($value===null){
 			$this->remove($key);
 		}else{
 			$this->config[$key]=$value;
