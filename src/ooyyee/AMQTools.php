@@ -1,6 +1,6 @@
 <?php
 
-namespace utils;
+namespace ooyyee;
 
 use think\facade\Log as ThinkLog;
 use \AMQPChannel;

@@ -1,6 +1,6 @@
 <?php
 
-namespace utils;
+namespace ooyyee;
 
 
 use Lcobucci\JWT\Builder;

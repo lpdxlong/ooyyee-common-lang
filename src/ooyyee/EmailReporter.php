@@ -1,8 +1,6 @@
 <?php
 
-namespace mail;
-
-
+namespace ooyyee;
 use ooyyee\mail\PHPMailer;
 use think\facade\View;
 use think\facade\Request;
