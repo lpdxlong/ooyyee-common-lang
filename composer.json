@@ -6,13 +6,15 @@
             "name": "lpdx111"
         }
     ],
+    "minimum-stability": "dev",
     "license": "MIT",
     "require-dev": {
         "php": ">=5.6",
         "phpoffice/phpexcel": "^1.8",
         "topthink/framework": "~v5.1",
         "qiniu/php-sdk": "^7.2",
-        "lcobucci/jwt": "^3.3"
+        "lcobucci/jwt": "^3.3",
+        "phpoffice/phpspreadsheet": "^1.7"
     },
     "autoload": {
         "psr-4": {
