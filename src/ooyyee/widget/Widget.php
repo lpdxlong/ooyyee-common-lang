@@ -1,6 +1,6 @@
 <?php
 
-namespace oooyyee\widget;
+namespace ooyyee\widget;
 
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]

@@ -6,7 +6,7 @@
  * Time: 10:23
  */
 
-namespace crm\facade;
+namespace ooyyee\facade;
 
 
 use think\Facade;
