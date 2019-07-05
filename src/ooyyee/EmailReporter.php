@@ -88,7 +88,7 @@ class EmailReporter
             $params['url']=$url;
         }
 
-		$html=View::instance()->fetch(__DIR__.'mail.html',array('data'=>$mailBody,'params'=>$params));
+		$html=View::instance()->fetch(__DIR__.'/mail.html',array('data'=>$mailBody,'params'=>$params));
 		
 		$mail->Body = $html;
 		$result = $mail->send();
