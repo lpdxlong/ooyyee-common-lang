@@ -2,12 +2,13 @@
 
 namespace ooyyee\exception;
 
+use ooyyee\AMQTools;
+use ooyyee\facade\CurrentUser;
 use think\exception\Handle;
 use think\facade\Log;
 use Exception;
 use think\facade\Request;
-use utils\AMQTools;
-use utils\CurrentUser;
+
 
 class EmailErrorHandler extends Handle
 {
