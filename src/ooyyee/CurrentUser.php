@@ -30,7 +30,7 @@ class CurrentUser
                     $permissions = db ( 'permission_node','crm' )->column ( 'id' );
                     $user['super'] = 1;
                 } else {
-                    $roles = db ( 'role' )->whereIn ( 'id', $roleIds )->select ();
+                    $roles = db ( 'role','crm'  )->whereIn ( 'id', $roleIds )->select ();
                     $chunks=array_map(function ($role){
                         return explode ( ',', $role['permissions']);
                     },$roles);
