@@ -7,4 +7,3 @@ interface IFunctionHandler
 	public function run($value);
 }
 
-?>

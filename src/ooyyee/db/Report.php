@@ -4,7 +4,6 @@ namespace ooyyee\db;
 
 
 use ooyyee\Excel;
-use ooyyee\TableColumnParser;
 use think\db\Query;
 
 
@@ -129,7 +128,7 @@ class Report {
 	}
 
 	private function processColumn($columns){
-        $_columns=TableColumnParser::parse($columns);
+        $_columns=\ooyyee\ui\TableColumnParser::parse($columns);
 		return empty($_columns)?$columns:$_columns;
 	}
 	public function sort(Callable $sortFunction){
@@ -200,4 +199,3 @@ class Report {
 	}
 }
 
-?>
