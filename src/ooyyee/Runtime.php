@@ -5,7 +5,7 @@ namespace ooyyee;
 class Runtime
 {
 	public static function get($key,$defaultValue=''){
-		$value=db('runtime')->where('key',$key)->value('value');
+		$value=db('runtime','core')->where('key',$key)->value('value');
 		if($value){
             $value=json_decode($value,true);
             return isset($value['data'])?$value['data']:$defaultValue;
@@ -13,6 +13,6 @@ class Runtime
 		return $defaultValue;
 	}
 	public static function save($key,$value){
-	    db('runtime')->insert(['key'=>$key,'value'=>json_encode(['data'=>$value])],true);
+	    db('runtime','core')->insert(['key'=>$key,'value'=>json_encode(['data'=>$value])],true);
 	}
 }

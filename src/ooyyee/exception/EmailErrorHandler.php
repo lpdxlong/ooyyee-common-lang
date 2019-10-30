@@ -5,6 +5,7 @@ namespace ooyyee\exception;
 use ooyyee\AMQTools;
 use ooyyee\facade\CurrentUser;
 use think\exception\Handle;
+use think\exception\HttpException;
 use think\facade\Log;
 use Exception;
 use think\facade\Request;
@@ -13,6 +14,15 @@ use think\facade\Request;
 class EmailErrorHandler extends Handle
 {
 	public function report(Exception $exception){
+		if($exception instanceof  HttpException && $exception->getStatusCode() == 404){
+			$message=$exception->getMessage();
+			if(strpos($message, ':')) {
+				$name    = strstr($message, ':', true);
+				if($name =='module not exists'){
+					return ;
+				}
+			}
+		}
 		$session = isset ( $_SESSION ) ? $_SESSION : [ ];
 		$data = [ 
 			'code' => $this->getCode ( $exception ),
