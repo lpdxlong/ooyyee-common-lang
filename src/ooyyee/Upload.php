@@ -57,6 +57,22 @@ class Upload
         }
         return $this->auth;
     }
+
+
+    public function getToken($type){
+         $key=$this->config['accessKey'].'_'.$type.'_qiniu_token';
+         $token=cache($key);
+         if($token){
+             return $token;
+         }
+        $bucket=$this->fetchBucket($type);
+        $policy = array();
+        $token=$this->createAuth()->uploadToken($bucket, null, 3600, $policy);
+        cache($key,$token,3000);
+        return $token;
+    }
+
+
     public  function fetchBucket($type){
         $type=$type ==='video'?'video':'default';
         return $this->config[$type]['bucket'];
@@ -90,10 +106,7 @@ class Upload
             $type='video';
         }
         $fileName=$this->getFullName($format,'.'.$extension);
-        $auth=$this->createAuth();
-        $bucket=$this->fetchBucket($type);
-        $policy = array();
-        $token = $auth->uploadToken($bucket, null, 3600, $policy);
+        $token=$this->getToken($type);
         $uploadMgr = new UploadManager(new Config(Region::regionHuabei()));
         list($res,$error)= $uploadMgr->putFile($token, $fileName, $file->getInfo('tmp_name'));
         if($error && $error instanceof Error){
