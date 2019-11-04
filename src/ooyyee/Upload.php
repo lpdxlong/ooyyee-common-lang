@@ -24,7 +24,7 @@ class Upload
     private $config;
     public function __construct()
     {
-        $this->config=config('qiniu');
+        $this->config=config('qiniu.');
     }
 
     /**
