@@ -11,6 +11,7 @@ use Qiniu\Auth;
 use Qiniu\Config;
 use Qiniu\Etag;
 use Qiniu\Http\Error;
+use Qiniu\Region;
 use Qiniu\Storage\BucketManager;
 use Qiniu\Storage\UploadManager;
 use Qiniu\Zone;
@@ -93,7 +94,7 @@ class Upload
         $bucket=$this->fetchBucket($type);
         $policy = array();
         $token = $auth->uploadToken($bucket, null, 3600, $policy);
-        $uploadMgr = new UploadManager(new Config(Zone::zone1()));
+        $uploadMgr = new UploadManager(new Config(Region::regionHuabei()));
         list($res,$error)= $uploadMgr->putFile($token, $fileName, $file->getInfo('tmp_name'));
         if($error && $error instanceof Error){
             return ['errcode'=>1,'errmsg'=>$error->message()];
