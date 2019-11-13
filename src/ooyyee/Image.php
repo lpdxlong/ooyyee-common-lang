@@ -92,7 +92,7 @@ class Image {
      * @return string
      */
     public static function fileToURL($file,$time=true){
-		$path=str_replace(env('root_path').'public', '', $file);
+		$path=str_replace(env('root_path').'public/', '', $file);
 		$protocol=request()->isSsl()?'https://':'http://';
 		$url= $protocol.config('url_domain_root').'/'.$path;
 		if($time){
