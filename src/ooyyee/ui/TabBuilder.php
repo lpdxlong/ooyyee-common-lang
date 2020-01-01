@@ -57,7 +57,7 @@ class TabBuilder
      */
     public function fetch(){
 
-        return View::fetch('base@html:tab',['filter'=>$this->filter,'tabs'=>$this->tabs,'module'=>$this->module]);
+        return View::fetch(__DIR__.'/view/tab.html',['filter'=>$this->filter,'tabs'=>$this->tabs,'module'=>$this->module]);
     }
     public function __toString()
     {

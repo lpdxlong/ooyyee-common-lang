@@ -19,7 +19,7 @@ class Table extends Widget
         $default['id']='table';
         $default['cellMinWidth']=80;
         $default['toolbar']=false;
-        $default['report']='';
+        $default['report']="";
         $data=array_merge($default,$data);
 
         $config=[
@@ -67,9 +67,18 @@ class Table extends Widget
             }
         }
 
+
+        foreach ($config['cols'] as $k=> $cols){
+            foreach ($cols as $key=>$col){
+                if(isset($col['toolbar'])){
+                    $col['toolbar']='#'.$config['id'].'_manager';
+                    $config['cols'][$k][$key]=$col;
+                }
+            }
+        }
+
         $data['config']=$this->my_json_decode(json_encode($config,JSON_UNESCAPED_UNICODE));
         return $this->renderFile('table', $data);
-
     }
     private function my_json_decode($str) {
         $str = preg_replace('/"(\w+)"(\s*:\s*)/is', '$1$2', $str);   //去掉key的双引号

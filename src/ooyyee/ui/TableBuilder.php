@@ -14,23 +14,36 @@ use think\facade\View;
 
 class TableBuilder
 {
-    private $columns=[];
-    private $setting=[
+    private $columns = [];
+    private $setting = [
         'toolbar' => [
             'edit' => '编辑.warm',
             'del' => '删除.danger'
         ],
         'cellMinWidth' => 120
     ];
-    private $url='data';
+    private $url = 'data';
+    private $title = '';
+    private $headerTitle;
+    private $addTitle;
+    private $searchFile = __DIR__.'/view/search.html';
+    private $jsFile = 'common.table';
+    private $values = [];
+    private $moduleName='data';
+    private $moduleUrl='';
+    private $area=['width'=>'800px','height'=>'600px'];
+
+
+
 
 
     /**
      * @param array $columns
      * @return $this
      */
-    public function column(array $columns){
-        $this->columns=$columns;
+    public function column(array $columns)
+    {
+        $this->columns = $columns;
         return $this;
     }
 
@@ -39,36 +52,234 @@ class TableBuilder
      * @param int $type 0 合并 1 覆盖
      * @return $this
      */
-    public function setting(array $setting,$type=0){
-        if($type==0){
-            $this->setting=array_merge($this->setting,$setting);
-        }else if($type ==1){
-            $this->setting=$setting;
+    public function setting(array $setting, $type = 0)
+    {
+        if ($type == 0) {
+            $this->setting = array_merge($this->setting, $setting);
+        } else if ($type == 1) {
+            $this->setting = $setting;
         }
-
         return $this;
     }
+
+    public function report($url='report'){
+        return $this->setting([ 'report' => url($url)]);
+    }
+
+    /**
+     * @param array $toolbar
+     * @param int $type 0 合并 1 覆盖
+     * @return $this
+     */
+    public function toolbar(array $toolbar, $type = 0)
+    {
+
+        if ($type == 0) {
+            $this->setting['toolbar'] = array_merge($this->setting['toolbar'], $toolbar);
+        } else {
+            $this->setting['toolbar'] = $toolbar;
+        }
+        return $this;
+    }
+
     /**
      * @param $url
      * @return $this
      */
-    public function data($url){
-        $this->url=$url;
+    public function data($url)
+    {
+        $this->url = $url;
         return $this;
+    }
+
+    public function fetchTable()
+    {
+        return $this->fetch(__DIR__.'/view/table.html');
     }
 
     /**
      * @param string $template
      * @return string
      */
-    public function fetch($template=''){
-        $this->setting['columns']=TableColumnParser::parse(array_values($this->columns));
-        $this->setting['url']=url($this->url);
-        return View::fetch($template,['setting'=>$this->setting]);
+    public function fetch($template = '')
+    {
+        $columns = TableColumnParser::parse(array_values($this->columns));
+        foreach ($this->values as $key =>$v){
+            foreach ($columns as $k=> $column){
+                if($column['field'] == $key){
+                    $column['templet']='values';
+                }
+                $columns[$k]=$column;
+            }
+        }
+
+        $this->setting['columns']=$columns;
+        $this->setting['url'] = url($this->url);
+        $this->setting['values']=$this->values;
+        View::assign([
+            'title' => $this->getTitle(),
+            'headerTitle' => $this->getHeaderTitle(),
+            'addTitle' => $this->getAddTitle(),
+            'search' => $this->getSearchFile(),
+            'setting' => $this->setting,
+            'jsfile' => $this->jsFile,
+            'values' => json_encode($this->values, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT),
+            'moduleName'=>$this->moduleName,
+            'moduleUrl'=>$this->moduleUrl,
+            'area'=>$this->area
+        ]);
+        return View::fetch($template);
     }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param $title
+     * @return $this
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHeaderTitle()
+    {
+        return $this->headerTitle ?: $this->title . '管理';
+    }
+
+    /**
+     * @param mixed $headerTitle
+     */
+    public function setHeaderTitle($headerTitle)
+    {
+        $this->headerTitle = $headerTitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAddTitle()
+    {
+        return $this->addTitle ?: '添加' . $this->title;
+    }
+
+    /**
+     * @param mixed $addTitle
+     */
+    public function setAddTitle($addTitle)
+    {
+        $this->addTitle = $addTitle;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSearchFile()
+    {
+        return $this->searchFile;
+    }
+
+    /**
+     * @param $searchFile
+     * @return $this
+     */
+    public function setSearchFile($searchFile)
+    {
+        $this->searchFile = $searchFile;
+        return $this;
+    }
+
+    /**
+     * @param int $width
+     * @param int $height
+     * @return $this
+     */
+    public function setArea($width,$height)
+    {
+        $this->area = ['width'=>$width.'px','height'=>$height.'px'];
+        return $this;
+    }
+
+    /**
+     * @param $data
+     * @param int $count
+     * @return \think\response\Json
+     */
+    public function result($data, $count = 0)
+    {
+        return json(['errcode' => 0, 'data' => $data, 'total' => $count]);
+    }
+
     public function __toString()
     {
         return $this->fetch();
+    }
+
+    /**
+     * @param $jsFile
+     * @return $this
+     */
+    public function setJsFile($jsFile)
+    {
+        $this->jsFile = $jsFile;
+        return $this;
+    }
+
+    /**
+     * @param $field
+     * @param $values
+     * @return $this
+     */
+    public function addValues($field, $values)
+    {
+        $this->values[$field] = $values;
+        return $this;
+    }
+
+    /**
+     * @param $field
+     * @param $aValue
+     * @param $bValue
+     * @return $this
+     */
+    public function addABValues($field, $aValue, $bValue)
+    {
+        $this->values[$field] = [0 => $aValue, 1 => $bValue];
+        return $this;
+    }
+
+    /**
+     * @param $id
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @param $moduleName
+     * @param $moduleUrl
+     * @param string $title
+     * @return $this
+     */
+    public function table($moduleName, $moduleUrl, $title = '')
+    {
+        $this->moduleName = $moduleName;
+        $this->moduleUrl = $moduleUrl;
+        $this->title = $title;
+        return $this;
     }
 
 }
