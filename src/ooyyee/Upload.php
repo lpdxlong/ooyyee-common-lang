@@ -114,7 +114,7 @@ class Upload
         }
 
         $myFile=[
-            'hash'=>$hash,
+            'hash'=>$hash[0],
             'title'=>$file->getInfo('name'),
             'type'=>$type,
             'storage'=>'qiniu',
